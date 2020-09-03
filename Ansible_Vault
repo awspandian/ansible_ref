@@ -1,0 +1,11 @@
+ansible-vault create vault-pass.yml
+cat vault-pass.yml
+ansible-vault view vault-pass.yml
+ansible-vault edit vault-pass.yml
+
+ansible-vault decrypt vault-pass.yml
+
+
+ansible-playbook ansible-vault.yml --ask-vault-pass
+
+ansible-playbook ansible-vault.yml --vault-password-file vault.yml
