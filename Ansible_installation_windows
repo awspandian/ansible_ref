@@ -1,0 +1,29 @@
+64 bit windows  - linx subsystem -> to settings select Updates and security-> select for developers-> select for developer and need to restart for updates
+go to Programs->windows features on or offf -> select windows subsystems enable it.
+
+go to cmd and type bash then type y to continue; then  user anem and password.
+sudo apt-get -y install python-pip python-virtualenv libyaml-dev libffi-dev libssl-dev
+
+virtualenv venv27
+source venv27/bin/activate
+which python
+which pip
+sudo apt-get install git python-dev -y
+pip install --upgrade pip
+pip install git+https://github.com/ansible/ansible
+ansible all -i localhost, -c local -m ping
+cygwin download and install  with below package
+python2,python2-devel,python2-openssl,python2-pip,python2-setuptools,gcc-core, libffi-devel,libtool,make,curl,openssl-devel,openssl,git
+
+go to cygwin-> echo 'export PS1="[\h:\w]$ "' >> .bashrc
+source bashrc
+python
+easy_install2.7 virtualenv
+mkdir ansible
+cd ansible
+virtualenv venv27
+source venv27/bin/activate
+which python
+which pip
+pip install git+https://github.com/ansible/ansible
+ansible all -i localhost, -c local -m ping
