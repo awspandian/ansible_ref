@@ -1,0 +1,30 @@
+ansible --list-hosts dev
+ansible dev -m ping
+ansible dev -a "hostname"
+ansible dev -a "df -h"
+ansible dev -a "free-m"
+ansible dev -a  "uptime"
+ansible web -a  "date"
+ansible dev -m copy -a "src=test.txt dest=/tmp/"
+ansible dev -m file -a "dest=/tmp/test.txt mode=600" 
+ansible dev -m file -a "dest=/tmp/demo mode=777 state=directory"
+ansible dev -m file -a "dest=/tmp/demo state=absent"
+ansible dev -m yum -a "name=nginx state=present"
+ansible dev -m service -a "name=nginx state=started"
+ansible dev -m service -a "name=nginx state=restarted"
+ansible dev -m service -a "name=nginx state=stoped"
+ 
+ ansible all -a 'hostname'
+ ansible all -m command -a 'hostname' -o
+ ansible all -m file -a 'path=/tmp/test state=touch'
+ ansible all -m file -a 'path=/tmp/test1 state=touch mode=666'
+ ansible all -m file -a 'path=/tmp/test state=file mode=666'
+ ansible dev -m copy -a "src=/tmp/test dest=/opt" -b
+ ansible dev -m copy -a 'remote_src=yes src=/tmp/test dest=/tmp/y'
+ ansible all -a 'rm /tmp/test removes=/tmp/test'
+ 
+ ansible-doc file
+ 
+Green = Sucess
+Yellow = Sucess with Changes
+Red = Failure
