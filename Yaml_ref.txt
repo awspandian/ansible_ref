@@ -1,0 +1,52 @@
+https://docs.ansible.com/ansible/latest/modules/list_of_commands_modules.html
+
+https://yaml.org/
+https://yaml.org/start.html
+www.yamllint.com
+
+			# Key value pair
+
+Fruit: Orange
+Vegetable: onion
+Liquid: water
+Meat: Lamb
+
+		   #	Array/List
+Fruits:
+-  Orange
+-  Apple
+-  Banana
+
+Vegetables:
+-  Onion
+-  Tomato
+-  carrot
+
+		  #   Dictionary/Map
+Banana:
+   Calories: 100
+   Fat: 0.8g
+   Carbs: 20g
+   
+Grapes:
+  Calories: 60
+  Fat: 0:5 g
+  Carbs: 15 g
+  
+Dictionary - unordered
+List	- Ordered
+  
+				#Dictionary
+  Banana:				          Banana:
+   Calories: 100          Calories: 100
+   Fat: 0.8g         =    Carbs: 20g
+   Carbs: 20g			  Fat: 0.8g
+   
+				# Array/List
+	Fruits						            	Fruits
+	-  Apple                        		-  Banana
+	-  Banana			notequval	        -  Orange
+	-  Orange						        -  Apple
+   
+				#Variable
+Stores information that varies with each host 
