@@ -25,6 +25,17 @@ ansible dev -m service -a "name=nginx state=stoped"
  
  ansible-doc file
  
-Green = Sucess
-Yellow = Sucess with Changes
-Red = Failure
+ansible-playbook motd_playbook.yml -e 'motd="ansile class is going on \n" ' -b
+ansible centos  -m setup | grep distribution
+ansible-playbook variables_playbook.yml -e 'extra_vars_key="extre vars value" '-b   ///03 - Ansible Playbooks -Variables/17
+ ansible-playbook variables_playbook.yml -e '{extra_vars_key= extra vars in yaml} ' -b
+ 
+ ansible centos1 -m setup -a 'gather_subset=network' | more
+ ansible centos1 -m setup -a 'gather_subset=network,!all,!min'
+ ansible centos1 -m setup -a 'gather_subset=network,!all,!min' | wc -l
+  ansible centos1 -m setup -a 'gather_subset=network' | wc -l
+ansible centos1 -m setup -a 'filter=ansible_memfree_mb'
+ansible centos1 -m setup -a 'filter=ansible_mem*'
+ansible centos1 -m setup | more
+
+
