@@ -1,0 +1,54 @@
+sudo apt-get update
+sudo apt-get install softeare-properties-common -y
+sudo apt-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install anisble -y
+ansible --version
+########################################
+sudo apt-get update
+sudo apt-get install python-minimal virtualenv python-dev build-essential
+mkdir ansible
+cd anisble
+virtualenv venv
+source venv/bin/activate
+which python
+which pip
+pip install ansible
+which ansible
+anisble --version
+pip uninstall ansible
+sudo apt-get install git -y
+pip install git+https://github.com/ansible/ansible
+anisble --version
+
+########################################
+sudo yum install asciidoc python-jinja2 PyYAML git pythonsetuptools rpm-build python2-devel -y
+cd /tmp
+git clone https://github.com/ansible/ansible.git
+cd ansible
+make rpm
+ls rpm-build
+sudo rpm -Uvh ./rpm-build/ansible-*.noarch.rpm
+yum install python-paramiko python-six python2-cryptography sshpass -y
+which ansible
+ansible --version
+
+########################################
+sudo yum install epel-release
+sudo  yum install ansible
+ansible --version
+########################################
+sudo yum groupinstall 'Development Tools'
+sudo yum install python-virtualenv libffi-devel openssl-devel python-cffi PyYAML -y
+mkdir anisble
+cd anisble
+virtualenv venv
+source venv/bin/activate
+which python
+which pip
+pip install --upgrade setuptools
+pip install anisble -y
+which anisble
+anisble --vesion
+pip uninstall anisble
+pip install git+https://github.com/ansible/ansible
