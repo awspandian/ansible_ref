@@ -1,11 +1,50 @@
-ansible-vault create vault-pass.yml
-cat vault-pass.yml
-ansible-vault view vault-pass.yml
-ansible-vault edit vault-pass.yml
+Ansible vault is a feature of ansible that allows you to keep sensitive data such as passwords or keys in encrypted files, rather than as plaintext in playbooks or roles.
 
-ansible-vault decrypt vault-pass.yml
+ 
+
+Create: to create ansible vault file in the encrypted format
+  # ansible-vault create vault-demo.yml
+
+cat vault-demo.yml
+
+view: to view data of encrypted file
+  # ansible-vault view vault-demo.yml
+
+edit: to edit encrypted file
+  # ansible-vault edit vault-demo.yml
+
+decrypt: to decrypt an encrypted file
+  # ansible-vault decrypt vault-demo.yml
+
+--ask-vault-pass: to provide password while running playbook
+  # ansible-playbook ansible-vault.yml --ask-vault-demo
+
+-vault-password-file: to pass a vault password through a file
+  # ansible-playbook ansible-vault.yml --vault-password-file vault.yml
 
 
-ansible-playbook ansible-vault.yml --ask-vault-pass
+ansible-vault creat vault-demo.yml
 
-ansible-playbook ansible-vault.yml --vault-password-file vault.yml
+**************vi vault-demo.yml**************
+---
+- name: this playbook creates a file or dir
+  hosts: all
+  #  become: true
+  #  gather_facts: no
+  tasks:
+  - name: creating a file
+    file:
+      path: /home/ansible/dir1
+      state: directory 
+ **********************************************************************     
+ 
+  ansible-vault encrypt vault-demo.yml
+  
+  ansible-vault edit vault-demo.yml
+  
+  ansible-vault view vault-demo.yml
+  
+  ansible-vault decrypt vault-demo.yml
+ 
+
+  
