@@ -3,12 +3,382 @@ Ansible Configuration Management Tool
 agentless IT automation
 
 
+---
+- name: this playbook install httpd
+  hosts: centos
+  become: true
+  tasks:
+  - name: install package
+    yum: 
+      name: httpd 
+      state: installed
+
+  - name: start apache
+    service:
+      name: httpd
+      state: started 
+
+**************************************************************
 
 
-https://docs.ansible.com/ansible/latest/user_guide/modules.html
+*********************Notify and Handlers***********************
 
-https://docs.ansible.com/ansible/latest/network/getting_started/basic_concepts.html
 
-https://www.ansible.com/blog/getting-started-writing-your-first-playbook
+---
+- name: this playbook install httpd
+  hosts: centos
+  become: true
+  tasks:
+  - name: install package
+    yum: 
+      name: httpd 
+      state: installed
+    notify: start apache
 
+  handlers:
+  - name: start apache
+    service:
+      name: httpd
+      state: started 
+	  
+********************* Gather Facts***********************	  
+---
+- name: this playbook creates a  dir
+  hosts: all
+  #  become: true
+  #  gather_facts: no
+  tasks:
+  - name: creating a file
+    file:
+      path: /home/ansible/dir1
+      state: directory 
+	  
+*********************	When Condition - Install HTTPD ***********************	 
+---
+- name: this playbook install httpd
+  hosts: all
+  become: true
+  tasks:
+  - name: install package
+    yum:
+      name: httpd
+      state: installed
+    when: ansible_os_family == "RedHat"
+
+  - name: start apache
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+
+  - name: install apache2
+    apt:
+      name: apache2
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: start apache2
+    service:
+      name: apache2
+      state: started
+    when: ansible_os_family == "Debian"
+
+  - name: copy index.html
+    copy:
+      src: /opt/index.html
+      dest: /var/www/html
+      mode: 0666 
+********************* When Condition - Uninstall HTTPD ***********************	 
+---
+- name: this playbook uninstall httpd
+  hosts: all 
+  become: true
+  tasks:
+  - name: stop httpd service
+    service:
+      name: httpd
+      state: stopped
+    when: ansible_os_family == "RedHat" 
+
+  - name: uninstall httpd
+    yum: 
+      name: httpd
+      state: removed
+    when: ansible_os_family == "RedHat"
+
+  - name: stop apache2 services
+    service: 
+      name: apache2
+      state: stopped
+    when: ansible_os_family == "Debian"
+
+  - name: uninstall apache2
+    apt: 
+      name: apache2
+      state: absent 
+    when: ansible_os_family == "Debian"
+	
+*********************	List & with_item ***********************	
+---
+- name: this playbook install pacakges
+  hosts: centos
+  become: true
+  tasks:
+  - name: install package
+    yum: 
+    #      name: ['git', 'make', 'gcc', 'wget', 'telnet', 'gzip', 'tree'] 
+      name: "{{ item }}"
+      state: installed
+    with_items: 
+      - git
+      - make
+      - gcc
+      - wget
+      - telnet
+      - gzip
+	  - tree
+	  
+
+*******************************************	 
 https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html
+
+Define with in the playbook
+passing from external files
+passing from hosts inventory
+passing while running playbook
+Using group_vars or hosts_vars
+
+*********************** Variables**************************************
+---
+- name: this playbook is to create user
+  hosts: all
+  become: true
+  vars_files: 
+    - user.yml
+  tasks:
+  - name: creating user {{ user }} 
+    user:
+      name: "{{ user }}"
+
+****user.yml*******	  
+	  user.yml
+	  user: raja
+	  
+ansible-playbook -i all variables.yml -e "user=pandian"  [--exter-vars]
+	  
+**************************************************************
+
+ref:links
+https://docs.ansible.com/ansible/latest/modules/get_url_module.html
+
+
+---
+- name: setup tomcat
+  hosts: all
+  become: true
+  tasks: 
+  - name: install java
+    yum: 
+      name: java
+      state: installed
+    when: ansible_os_family == "RedHat"
+
+  - name: install java on ubuntu
+    apt: 
+      name: default-jdk
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: download tomcat packages
+    get_url:
+      url: http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.tar.gz
+      dest: /opt
+
+  - name: untar apache packages
+    unarchive:
+      src: /opt/apache-tomcat-8.5.57.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: add execution permissions on startup.sh file
+    file: 
+      path: /opt/apache-tomcat-8.5.57/bin/startup.sh
+      mode: 0777
+
+  - name: start tomcat services
+    shell: nohup ./startup.sh
+    args: 
+      chdir: /opt/apache-tomcat-8.5.57/bin
+	  
+*********************** Tags**************************************
+---
+- name: this playbook install httpd
+  hosts: all
+  become: true
+  tasks:
+  - name: install package
+    yum:
+      name: httpd
+      state: installed
+    when: ansible_os_family == "RedHat"
+	tags: install_apache
+
+  - name: start apache
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+	tags: start_apache 
+
+  - name: install apache2
+    apt:
+      name: apache2
+      state: present
+    when: ansible_os_family == "Debian"
+	tags: install_apache
+  - name: start apache2
+    service:
+      name: apache2
+      state: started
+    when: ansible_os_family == "Debian"
+	tags: start_apache
+  - name: copy index.html
+    copy:
+      src: /opt/ansible/index.html
+      dest: /var/www/html
+      mode: 0666	  
+	  
+*********************** Error_Handling.yml**************************************
+---
+- name: this playbook install httpd
+  hosts: all
+  become: true
+  tasks:
+  - name: install package
+    yum:
+      name: httpd
+      state: installed
+    when: ansible_os_family == "RedHat"
+
+  - name: start apache
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+	ignore_error: yes
+
+  - name: install apache2
+    apt:
+      name: apache2
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: start apache2
+    service:
+      name: apache2
+      state: started
+    when: ansible_os_family == "Debian"
+
+  - name: copy index.html
+    copy:
+      src: /opt/ansible/index.html
+      dest: /var/www/html
+      mode: 0666
+
+*********************** Vault-demo.yml**************************************	  
+
+---
+- name: ansible palybook to test ansible vault
+  hosts: all
+  become: true
+  vars_files:
+    - vault-key.yml
+  tasks:
+  - name: clone a repo
+    git: 
+      repo: https://awspandian:{{ password }}@github.com/awspandian/vault-demo.git
+      dest: /opt/ansible/vault-sample
+	  
+ansible-playbook vault-demo.yml --check	 
+
+ansible-playbook vault-demo.yml --ask-vault-pass
+
+ansible-playbook vault-demo.yml --vault-password-file key.yml
+
+************vault-key.yml************
+password: abcdef****
+
+************key.yml************
+key_for_vault-key 
+
+****************************************************************************************
+
+https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html
+
+https://docs.ansible.com/ansible/latest/modules/lineinfile_module.html
+
+ansible-galaxy init setup-apache
+
+---
+- name: this playbook install httpd
+  hosts: all
+  become: true
+  tasks:
+  - name: install package
+    yum:
+      name: httpd
+      state: installed
+    when: ansible_os_family == "RedHat"
+	notify:start apache
+
+  - name: install apache2
+    apt:
+      name: apache2
+      state: present
+    when: ansible_os_family == "Debian"
+	notify:start apache2
+	
+  - name: copy index.html
+    copy:
+      src: /opt/ansible/index.html
+      dest: /var/www/html
+      mode: 0666
+  - name: Ensure the default Apache port is 8888
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^Listen '
+      insertafter: '^#Listen '
+      line: Listen 8888
+    when: ansible_os_family == "RedHat"
+	notify: restart apache
+  - name: Ensure the default Apache port is 8888
+    lineinfile:
+      path: /etc/apache2/ports.conf
+      regexp: '^Listen '
+      insertafter: "# /etc/apache2/sites-enabled/000-default.conf "
+      line: Listen 8888
+    when: ansible_os_family == "Debian"
+	notify: restart apache2
+
+  handlers:
+  - name: start apache
+    service:
+      name: httpd
+      state: started
+    when: ansible_os_family == "RedHat"
+
+  - name: start apache2
+    service:
+      name: apache2
+      state: started
+    when: ansible_os_family == "Debian"
+  - name:  restart apache
+    service:
+      name: httpd
+      state: restarted
+
+  - name:  restart apache2
+    service:
+      name: apache2
+      state: restarted
+
