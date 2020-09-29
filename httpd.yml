@@ -1,0 +1,27 @@
+---
+- name: Install Apache and stat the service
+  hosts: dev
+  user: ansible
+  become: yes 
+  vars:
+   web_pkg: httpd
+   web_service: httpd
+   perl_pkg: perl
+   rule: http
+
+  tasks:
+    - name: Install the required packages {{ web_pkg }}, {{ perl_pkg }}
+      yum:
+        name:
+          -  "{{ web_pkg }}"
+          -  "{{ perl_pkg }}"
+        state: latest
+    - name: Start and enable the {{ web_service  }} service
+      service:
+        name: "{{ web_service }}"
+        enabled: true
+        state: started
+    - name: Create web content to be served
+      copy:
+        content: "welcome to Hippo by AZCS"
+        dest: /var/www/html/index.html
