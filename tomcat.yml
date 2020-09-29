@@ -1,0 +1,34 @@
+---
+- name: setup tomcat
+  hosts: host
+  become: true
+  user: ansible
+  tasks:
+    - name: install java
+      yum:
+        name: java
+        state: installed
+      when: ansible_os_family == "RedHat"
+    - name: install java on ubuntu
+      apt:
+        name: default-jdk
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: download tomcat
+      get_url:
+        url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.56/bin/apache-tomcat-8.5.56.tar.gz
+        dest: /opt
+    - name: untar tom package
+      unarchive:
+        src: /opt/apache-tomcat-8.5.56.tar.gz
+        dest: /opt
+        remote_src: yes
+    - name: add execution permisons on startuo.sh
+      file:
+        path: /opt/apache-tomcat-8.5.56/bin/startup.sh
+        mode: 0777
+    - name: start tomcat servie
+      shell: nohup ./startup.sh
+      args:
+        chdir: /opt/apache-tomcat-8.5.56/bin
