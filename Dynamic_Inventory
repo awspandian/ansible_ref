@@ -1,0 +1,11 @@
+https://raw.githubusercontent.com/ansible/ansible/stable-2.8/contrib/inventory/ec2.ini
+
+https://raw.githubusercontent.com/ansible/ansible/stable-2.8/contrib/inventory/ec2.py
+attach ec2-role with administrator permision to ec2-instance 
+sudo mv ec2.py /etc/ansible/hosts
+sudo chmod +x /etc/ansible/hosts 
+sudo mv ec2.ini /etc/ansible/
+ansible all --list
+#ansible all -m ping --private-key=~/pandian21.pem
+
+/etc/ansible/hosts --list
