@@ -18,3 +18,23 @@ cd /opt
 sudo touch sample.txt
 sudo chmod +655 sample.txt
 sudo chown ansible:ansible sample.txt
+
+
+
+1.yml
+---
+- name: Transfer and execute a script.
+  hosts: dev
+  user: ansible
+  become: yes
+  tasks:
+- name: Transfer the script
+copy: src=demo.sh dest=/home/ansible owner=ansible group=ansible mode=0777
+
+- name: Execute the script
+command: sh /home/ansible/demo.sh
+
+- name: Remove the Script
+ansible.builtin.file:
+path: /home/ansible/demo.sh
+state: absent
